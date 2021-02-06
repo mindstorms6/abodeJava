@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+group 'org.bdawg'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+    compile group: 'io.socket', name: 'socket.io-client', version: '2.0.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
+    compile group: 'org.eclipse.jetty', name: 'jetty-client', version: '11.0.0'
+
+}
