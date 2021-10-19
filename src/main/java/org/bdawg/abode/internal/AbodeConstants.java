@@ -13,10 +13,8 @@
 package org.bdawg.abode.internal;
 
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The {@link AbodeConstants} class defines common constants, which are
@@ -46,6 +44,25 @@ public class AbodeConstants {
     public static final int STATUS_ON_INT = 1;
     public static final String STATUS_OFF = "Off";
     public static final int STATUS_OFF_INT = 0;
+
+    public static final String STATUS_LOCKOPEN = "LockOpen";
+    public static final int STATUS_LOCKOPEN_INT = 0;
+    public static final String STATUS_LOCKCLOSED = "LockClosed";
+    public static final int STATUS_LOCKCLOSED_INT = 1;
+
+    public static final String STATUSES_KEY = "statuses";
+    public static final String TEMP_STATUS_KEY = "temperature";
+    public static final String LUX_STATUS_KEY = "lux";
+    public static final String HUMI_STATUS_KEY = "humidity";
+    public static final Set<String> SENSOR_KEYS = new HashSet<>(Arrays.asList(TEMP_STATUS_KEY, LUX_STATUS_KEY, HUMI_STATUS_KEY));
+
+    public static final String UNIT_CELSIUS = "°C";
+    public static final String UNIT_FAHRENHEIT = "°F";
+    public static final String UNIT_PERCENT = "%";
+    public static final String UNIT_LUX = "lx";
+    public static final String LUX = "lux";
+
+    public static final String BRIGHTNESS_KEY = "statusEx";
 
     // GENERIC ABODE DEVICE TYPES
     public static final String TYPE_ALARM = "alarm";

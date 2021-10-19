@@ -3,14 +3,19 @@ package org.bdawg.abode.devices;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.bdawg.abode.Abode;
 import org.bdawg.abode.exceptions.AbodeException;
+import org.bdawg.abode.exceptions.ErrorConstants;
 import org.bdawg.abode.internal.AbodeConstants;
+import org.eclipse.jetty.client.util.StringContentProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+
 public class AbodeDevice {
-    private static final Logger logger = LoggerFactory.getLogger(AbodeDevice.class);
+    static final Logger logger = LoggerFactory.getLogger(AbodeDevice.class);
 
     private Abode abode;
     protected JsonObject json;
@@ -59,6 +64,43 @@ public class AbodeDevice {
         }
 
         return responseObject;
+    }
+
+    public boolean setStatus(JsonPrimitive status) throws AbodeException {
+        // """Set device status."""
+        if (this.json.has("control_url")) {
+            String url = AbodeConstants.BASE_URL + this.json.get("control_url");
+
+            JsonObject statusData = new JsonObject();
+            statusData.add("status", status);
+
+            JsonElement response = this.abode.sendRequest("put", url, Collections.emptyMap(), new StringContentProvider(statusData.toString()), false);
+
+            logger.debug(String.format("Set Status Response: %s", response.toString()));
+
+            if (!response.isJsonObject()) {
+                throw new AbodeException("Response was not a json object");
+            }
+
+            if (!response.getAsJsonObject().get("id").getAsString().equals(this.deviceId)) {
+                throw new AbodeException(ErrorConstants.SET_STATUS_DEV_ID);
+            }
+
+            if (!response.getAsJsonObject().get("status").equals(status)) {
+                throw new AbodeException(ErrorConstants.SET_STATUS_STATE);
+            }
+
+//            #Note:
+//            Status result is of int type, not of new status of device.
+//            #Seriously, why would you do that ?
+//            #So, can 't set status here must be done at device level.
+
+            logger.info(String.format("Set device %s status to: %s", this.deviceId, status));
+
+            return true;
+        }
+
+        return false;
     }
 
     public void update(JsonElement jsonState) {
